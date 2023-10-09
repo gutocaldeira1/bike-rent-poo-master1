@@ -60,18 +60,6 @@ describe('App', () => {
         await expect(app.moveBikeTo('fake-id', newYork)).rejects.toThrow(BikeNotFoundError)
     })
 
-    it('should throw an exception when trying to remove a user that still has a open bike rent', async () => {
-        const app = new App(userRepo, bikeRepo, rentRepo)
-        const user = new User('Jose', 'jose@mail.com', '1234')
-        await app.registerUser(user)
-        const bike = new Bike('caloi mountainbike', 'mountain bike',
-            1234, 1234, 100.0, 'My bike', 5, [])
-        await app.registerBike(bike)
-        await app.rentBike(bike.id, user.email)
-
-        await expect(app.removeUser(user.email)).rejects.toThrow(UserHasOpenRent)
-    })
-
     it('should correctly handle a bike rent', async () => {
         const app = new App(userRepo, bikeRepo, rentRepo)
         const user = new User('Jose', 'jose@mail.com', '1234')
@@ -152,5 +140,18 @@ describe('App', () => {
         await app.registerBike(bike)
 
         await expect(app.returnBike(bike.id, user.email)).rejects.toThrow(RentNotFoundError)
+    })
+
+    
+    it('should throw an exception when trying to remove a user that still has a open bike rent', async () => {
+        const app = new App(userRepo, bikeRepo, rentRepo)
+        const user = new User('Jose', 'jose@mail.com', '1234')
+        await app.registerUser(user)
+        const bike = new Bike('caloi mountainbike', 'mountain bike',
+            1234, 1234, 100.0, 'My bike', 5, [])
+        await app.registerBike(bike)
+        await app.rentBike(bike.id, user.email)
+
+        await expect(app.removeUser(user.email)).rejects.toThrow(UserHasOpenRent)
     })
 })
